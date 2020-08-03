@@ -23,58 +23,56 @@ Moreover, any attempt to create a file with the same name fails with the error E
 
 1. Create a transaction by calling [CreateTransaction](https://docs.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-createtransaction)
 ```cpp
-	HANDLE hTr = CreateTransaction(
-		NULL,                           // No inheritance
-		0,                              // Reserved
-		TRANSACTION_DO_NOT_PROMOTE,     // The transaction cannot be distributed
-		0,                              // Reserved
-		0,                              // Reserved
-		0,                              // Abort after timeout (ms), 0 = infinite
-		(LPWSTR)DESC					// Description
-	);
+HANDLE hTr = CreateTransaction(
+	NULL,                           // No inheritance
+	0,                              // Reserved
+	TRANSACTION_DO_NOT_PROMOTE,     // The transaction cannot be distributed
+	0,                              // Reserved
+	0,                              // Reserved
+	0,                              // Abort after timeout (ms), 0 = infinite
+	(LPWSTR)DESC			// Description
+);
 
-    if (hTr == INVALID_HANDLE_VALUE) {
-		cout << "CreateTransaction failed with err: " << GetLastError() << endl;
-		return EXIT_FAILURE;
-	}
+if (hTr == INVALID_HANDLE_VALUE) {
+	cout << "CreateTransaction failed with err: " << GetLastError() << endl;
+	return EXIT_FAILURE;
+}
 ```
 
 2. Get transacted file handle(s) by calling [CreateFileTransacted](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createfiletransacteda)
 ```cpp
-	HANDLE hTrFile = CreateFileTransactedA(
-		"C:\\Users\\t\\Desktop\\TrFile.txt",    // Path
-		GENERIC_READ | GENERIC_WRITE,			// R+W
-		0,										// Do not share
-		NULL,									// Default security
-		CREATE_ALWAYS,							// Overwrite if file exists
-		FILE_ATTRIBUTE_NORMAL,					// Normal file
-		NULL,									// No template file
-		hTr,									// Transaction handle
-		NULL,									// Miniversion (?)
-		NULL									// Reserved
-	);
+HANDLE hTrFile = CreateFileTransactedA(
+	"C:\\Users\\t\\Desktop\\TrFile.txt",    // Path
+	GENERIC_READ | GENERIC_WRITE,		// R+W
+	0,					// Do not share
+	NULL,					// Default security
+	CREATE_ALWAYS,				// Overwrite if file exists
+	FILE_ATTRIBUTE_NORMAL,			// Normal file
+	NULL,					// No template file
+	hTr,					// Transaction handle
+	NULL,					// Miniversion (?)
+	NULL					// Reserved
+);
 
-	if (hTrFile == INVALID_HANDLE_VALUE) {
-		cout << "CreateFile failed with err: " << GetLastError() << endl;
-		return EXIT_FAILURE;
-	}
+if (hTrFile == INVALID_HANDLE_VALUE) {
+	cout << "CreateFile failed with err: " << GetLastError() << endl;
+	return EXIT_FAILURE;
+}
 ```
 
 3. Modify the file(s) as necessary e.g. with [WriteFile](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
 4. Close all transacted file handles associated with the transaction
 ```cpp
-    CloseHandle(hTrFile);
+CloseHandle(hTrFile);
 ```
 5. Commit or abort the transaction
 ```cpp
-    res = CommitTransaction(hTr);
+CommitTransaction(hTr);
 ```
 6. Close transaction handle
 ```cpp
-    CloseHandle(hTr);
+CloseHandle(hTr);
 ```
 
 
-Ref.
-
-https://docs.microsoft.com/en-us/windows/win32/fileio/transactional-ntfs-portal
+Ref. https://docs.microsoft.com/en-us/windows/win32/fileio/transactional-ntfs-portal
