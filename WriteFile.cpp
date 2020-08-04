@@ -57,7 +57,7 @@ int main() {
 		0,                              // Reserved
 		0,                              // Reserved
 		0,                              // Abort after timeout (ms), 0 = infinite
-		(LPWSTR)DESC					// Description
+		(LPWSTR)DESC			// Description
 	);
 
 	if (hTr == INVALID_HANDLE_VALUE) {
@@ -69,15 +69,15 @@ int main() {
 	/* Create file */
 	HANDLE hTrFile = CreateFileTransactedA(
 		"C:\\Users\\t\\Desktop\\TrFile.txt",    // Path
-		GENERIC_READ | GENERIC_WRITE,			// R+W
-		0,										// Do not share
-		NULL,									// Default security
-		CREATE_ALWAYS,							// Overwrite if file exists
-		FILE_ATTRIBUTE_NORMAL,					// Normal file
-		NULL,									// No template file
-		hTr,									// Transaction handle
-		NULL,									// Miniversion (?)
-		NULL									// Reserved
+		GENERIC_READ | GENERIC_WRITE,		// R+W
+		0,					// Do not share
+		NULL,					// Default security
+		CREATE_ALWAYS,				// Overwrite if file exists
+		FILE_ATTRIBUTE_NORMAL,			// Normal file
+		NULL,					// No template file
+		hTr,					// Transaction handle
+		NULL,					// Miniversion (?)
+		NULL					// Reserved
 	);
 
 	if (hTrFile == INVALID_HANDLE_VALUE) {
