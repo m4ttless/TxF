@@ -26,6 +26,7 @@ DWORD __stdcall threadFn(LPVOID parameter) {
 
     HANDLE hTr = (HANDLE)parameter;
 
+	/* Open named mutex */
     HANDLE hMutex = CreateMutexA(NULL,FALSE,"mtx");
 
     if (!hMutex){
@@ -38,16 +39,16 @@ DWORD __stdcall threadFn(LPVOID parameter) {
     
     /* Create file */
 	HANDLE hTrFile = CreateFileTransactedA(
-		"C:\\Users\\t\\Desktop\\TrFile.txt",    // Path
-		FILE_APPEND_DATA,                       // Append data
-		0,					                    // Do not share
-		NULL,					                // Default security
-		OPEN_ALWAYS,				            // Open or create if not exists
-		FILE_ATTRIBUTE_NORMAL,			        // Normal file
-		NULL,					                // No template file
-		hTr,					                // Transaction handle
-		NULL,					                // Miniversion (?)
-		NULL                					// Reserved
+		"C:\\Users\\t\\Desktop\\TrFile.txt",	// Path
+		FILE_APPEND_DATA,						// Append data
+		0,										// Do not share
+		NULL,									// Default security
+		OPEN_ALWAYS,							// Open or create if not exists
+		FILE_ATTRIBUTE_NORMAL,					// Normal file
+		NULL,									// No template file
+		hTr,									// Transaction handle
+		NULL,									// Miniversion (?)
+		NULL									// Reserved
 	);
 
 	if (hTrFile == INVALID_HANDLE_VALUE) {
@@ -103,13 +104,13 @@ int main(){
 
 	/* Create Transaction */
 	HANDLE hTr = CreateTransaction(
-		NULL,                           // No inheritance
-		0,                              // Reserved
-		TRANSACTION_DO_NOT_PROMOTE,     // The transaction cannot be distributed
-		0,                              // Reserved
-		0,                              // Reserved
-		0,                              // Abort after timeout (ms), 0 = infinite
-		(LPWSTR)DESC			        // Description
+		NULL,							// No inheritance
+		0,								// Reserved
+		TRANSACTION_DO_NOT_PROMOTE,		// The transaction cannot be distributed
+		0,								// Reserved
+		0,								// Reserved
+		0,								// Abort after timeout (ms), 0 = infinite
+		(LPWSTR)DESC					// Description
 	);
 
 	if (hTr == INVALID_HANDLE_VALUE) {
@@ -120,9 +121,9 @@ int main(){
 
     /* Create Named mutex */
     HANDLE hMutex = CreateMutex(
-                        NULL,           // default , no inheritance
-                        FALSE,          // init not owned
-                        "mtx"           // named mutex
+                        NULL,			// default , no inheritance
+                        FALSE,			// init not owned
+                        "mtx"			// named mutex
                     ); 
     
     DWORD threadId;
